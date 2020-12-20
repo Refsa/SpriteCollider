@@ -101,9 +101,9 @@ public class SpriteColliderEditor : EditorWindow
         selectedStyle = new GUIStyle(EditorStyles.helpBox);
         selectedStyle.normal.background = selectedTexture;
 
-        isStyleSetup = true;
-
         SpriteColliderStyle.Setup();
+
+        isStyleSetup = true;
     }
 
     void SetupSlicer()
@@ -122,7 +122,7 @@ public class SpriteColliderEditor : EditorWindow
     }
     #endregion
 
-    #region Drawing
+    #region Drawing 
     void OnGUI()
     {
         if (!isStyleSetup)

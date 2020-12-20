@@ -55,7 +55,8 @@ public static class SpriteColliderStyle
     public static GUIStyle EventContainerStyle;
     public static GUIStyle EventNodeSelectedStyle;
 
-    static string packagePath = @"Assets/Systems/SpriteCollider/Editor/";
+    static string packagePath = @"\SpriteCollider\Editor";
+    static string packageExternalPath = @"Packages/com.refsa.spritecollider/Editor/";
     static string smallRoundedPath = "Textures/Small_Rounded.png";
     static string smallRoundedBorderPath = "Textures/Small_Rounded_Border.png";
     static string mediumRoundedPath = "Textures/Medium_Rounded.png";
@@ -82,6 +83,43 @@ public static class SpriteColliderStyle
         SetupStyles();
     }
 
+    static string GetAssetPath()
+    {
+        if (FolderExists(Application.dataPath, packagePath, out var path))
+        {
+            return path + @"\";
+        }
+        else
+        {
+            return packageExternalPath;
+        }
+    }
+
+    static bool FolderExists(string path, string folderName, out string foundPath)
+    {
+        bool found = false;
+        foundPath = "";
+        foreach (var folder in System.IO.Directory.GetDirectories(path))
+        {
+            if (folder.EndsWith(folderName))
+            {
+                int index = folder.IndexOf(@"Assets\");
+                foundPath = folder.Substring(index, folder.Length - index);
+
+                return true;
+            }
+            else
+            {
+                if (FolderExists(folder, folderName, out foundPath))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return found;
+    }
+
     static void SetupTextures()
     {
         Background1 = TextureGenerator.GenerateTexture(BackgroundColor1);
@@ -94,14 +132,17 @@ public static class SpriteColliderStyle
 
         Blank = TextureGenerator.GenerateTexture(Color.clear);
 
-        SmallRoundedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + smallRoundedPath);
-        SmallRoundedBorderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + smallRoundedBorderPath);
-        MediumRoundedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + mediumRoundedPath);
-        MenuBarButtonTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + menuBarButtonPath);
-        MenuBarHeaderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + menuBarHeaderPath);
-        MenuBarBackgroundTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + menuBarBackgroundPath);
-        EventHeaderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + eventHeaderPath);
-        CircleTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(packagePath + circlePath);
+        string assetPath = GetAssetPath();
+        UnityEngine.Debug.Log($"{assetPath}");
+
+        SmallRoundedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + smallRoundedPath);
+        SmallRoundedBorderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + smallRoundedBorderPath);
+        MediumRoundedTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + mediumRoundedPath);
+        MenuBarButtonTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + menuBarButtonPath);
+        MenuBarHeaderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + menuBarHeaderPath);
+        MenuBarBackgroundTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + menuBarBackgroundPath);
+        EventHeaderTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + eventHeaderPath);
+        CircleTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath + circlePath);
 
         TextureGenerator.SetColor(SmallRoundedTexture, Color.grey, out EventIconHoverTexture);
     }
